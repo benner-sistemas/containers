@@ -28,10 +28,8 @@ Entre no terminal linux, geralmente pelo comando `ssh root@[hostname]`, então v
 Faça o `clone` deste repositório:
 
 ``` bash
-git clone --progress -v "http://gitlab.benner.com.br/Technology/containers.git"
+git clone --progress -v "https://github.com/benner-sistemas/containers.git"
 ```
-
-Provavelmente você precisará de um usuário e senha para clonar este repositório. Caso suas credenciais do domínio benner não tenham permissão, acione alguém da Tecnologia para liberar o acesso ao repositório.
 
 Após clonar o repositório, entre no diretório, com o comando `cd containers`.
 
