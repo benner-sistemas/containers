@@ -1,0 +1,62 @@
+version: '2.3'
+services:
+    bserver:
+        image: bennersistemas/bserver:19.1.latest
+        container_name: tec-bserver
+        environment:
+            - WorkDir=[PastaDeTrabalho]
+            - Driver=[DriverBancoDeDados]
+            - ServerName=[ServidorDoBancoDeDados]
+            - DatabaseName=[NomeDaBaseDeDados]
+            - DbUser=[UsuarioDoBancoDados]
+            - DbPass=[SenhaDoBancoDados]
+        ports:
+            - 556:556
+            - 5331-5350:5331-5350
+        networks:
+            - tecwindows
+    btl:
+        image: bennersistemas/btl:19.1.latest
+        container_name: tec-btl
+        environment:
+            - Servidor=[servidor]
+            - Sistema=[sistema]
+            - Usuario=[usuário]
+            - LoggingServerAddress=http://[servidor]:9200
+        networks:
+            - tecwindows
+        depends_on:
+            - bserver
+    wfl:
+        image: bennersistemas/wfl:19.1.latest
+        container_name: tec-wfl
+        environment:
+            - superServerHost=[servidor]
+            - systemName=[sistema]
+            - user=[usuário]
+            - password=[senha]
+            - notifySenderUser=[usuário]
+            - loggingServerAddress=http://[servidor]:9200
+        networks:
+            - tecwindows
+        depends_on:
+            - bserver
+    wes:
+        image: bennersistemas/wes:19.1.latest
+        container_name: tec-wes
+        environment:
+            - superserverhost=[servidor]
+            - superserversystemname=[sistema]
+            - anonymoususername=[usuário]
+            - anonymouspassword=[senha]
+            - systeminstancename=[sistema]
+            - loggingserveraddress=http://[servidor]:9200
+            - sessionhost=[servidor]
+        networks:
+            - tecwindows
+        depends_on:
+            - bserver
+volumes:
+networks:
+    tecwindows:
+        driver: bridge

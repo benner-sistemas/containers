@@ -1,0 +1,98 @@
+version: '2.3'
+services:
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:6.4.0
+        container_name: tec-elasticsearch
+        environment:
+            - cluster.name=docker-cluster
+            - bootstrap.memory_lock=true
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        volumes:
+            - esdata1:/usr/share/elasticsearch/data
+        ports:
+            - 9200:9200
+        networks:
+            - teclinux
+    kibana:
+        image: docker.elastic.co/kibana/kibana:6.4.0
+        container_name: tec-kibana
+        ports:
+            - 5601:5601
+        networks:
+            - teclinux
+        environment:            
+            SERVER_HOST: 0.0.0.0
+            ELASTICSEARCH_URL: http://tec-elasticsearch:9200
+        depends_on:
+            - elasticsearch
+    redis:
+        image: redis
+        container_name: tec-redis
+        networks:
+            - teclinux
+        ports:
+            - 6379:6379
+    rabbit:
+        image: rabbitmq:3.7-management
+        container_name: tec-rabbit
+        ports:
+            - 15671:15671
+            - 15672:15672
+            - 5671:5671
+            - 5672:5672
+        networks:
+            - teclinux
+        volumes:
+            - rabbitmq_data:/var/lib/rabbitmq
+    portainer:
+        image: portainer/portainer
+        container_name: tec-portainer
+        ports:
+            - 7100:8000
+            - 7200:9000
+        networks:
+            - teclinux
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - portainer_data:/data portainer/portainer
+    keycloak:
+        image: jboss/keycloak
+        container_name: tec-keycloak
+        environment:
+            - KEYCLOAK_USER=admin
+            - KEYCLOAK_PASSWORD=admin
+        ports:
+            - 7500:8443
+            - 7600:8080
+        networks:
+            - teclinux
+    postgres-db:
+        image: postgres
+        container_name: tec-postgres-db
+        restart: always
+        environment:
+            - POSTGRES_PASSWORD=masterkey
+        networks:
+            - teclinux
+    postgres-adminer:
+        image: adminer
+        container_name: tec-postgres-adminer
+        restart: always
+        ports:
+            - 7700:8080
+        networks:
+            - teclinux
+volumes:
+    esdata1:
+        driver: local
+    #esdata2:
+    #    driver: local
+    portainer_data:
+    rabbitmq_data:
+networks:
+    teclinux:
+        driver: bridge
