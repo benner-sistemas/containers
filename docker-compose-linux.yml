@@ -47,7 +47,7 @@ services:
         networks:
             - teclinux
         volumes:
-            - rabbitmq_data:/var/lib/rabbitmq
+            - /data_rabbitmq:/var/lib/rabbitmq
     portainer:
         image: portainer/portainer
         container_name: tec-portainer
@@ -58,7 +58,7 @@ services:
             - teclinux
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
-            - portainer_data:/data portainer/portainer
+            - /data_portainer:/data portainer/portainer
     keycloak:
         image: jboss/keycloak
         container_name: tec-keycloak
@@ -75,24 +75,26 @@ services:
         container_name: tec-postgres-db
         restart: always
         volumes:
-            - /pgdata:/var/lib/postgresql/data
+            - /data_postgres:/var/lib/postgresql/data
         environment:
             - POSTGRES_PASSWORD=masterkey
         networks:
             - teclinux
-    postgres-adminer:
-        image: adminer
-        container_name: tec-postgres-adminer
-        restart: always
         ports:
-            - 7700:8080
+            - 5432:5432
+    pgadmin:
+        image: dpage/pgadmin4
+        container_name: tec-pgadmin
+        environment:
+          - PGADMIN_DEFAULT_EMAIL=infra@benner.com.br
+          - PGADMIN_DEFAULT_PASSWORD=masterkey
+        ports:
+          - 7800:80
         networks:
-            - teclinux
+          - teclinux
 volumes:
     esdata1:
         driver: local
-    portainer_data:
-    rabbitmq_data:
 networks:
     teclinux:
         driver: bridge

@@ -1,15 +1,17 @@
-version: '2.3'
+version: '3.2'
 services:
     bserver:
         image: bennersistemas/bserver:19.1.latest
         container_name: tec-bserver
         environment:
-            - WorkDir=[PastaDeTrabalho]
-            - Driver=[DriverBancoDeDados]
-            - ServerName=[ServidorDoBancoDeDados]
-            - DatabaseName=[NomeDaBaseDeDados]
-            - DbUser=[UsuarioDoBancoDados]
-            - DbPass=[SenhaDoBancoDados]
+            - WorkDir=C:\Benner\Install\
+            - Driver=${BS_DB_DRIVER}
+            - ServerName=${BS_DB_HOST}
+            - DatabaseName=${BS_DB_NAME}
+            - DbUser=${BS_DB_USER_NAME}
+            - DbPass=${BS_DB_USER_PASS}
+        volumes:
+            - ${BS_WORK_DIR}:C:\Benner\Install\
         ports:
             - 556:556
             - 5331-5350:5331-5350
@@ -19,10 +21,10 @@ services:
         image: bennersistemas/btl:19.1.latest
         container_name: tec-btl
         environment:
-            - Servidor=[servidor]
-            - Sistema=[sistema]
-            - Usuario=[usuário]
-            - LoggingServerAddress=http://[servidor]:9200
+            - Servidor=${BSERVER_HOST}
+            - Sistema=${SYSTEM_NAME}
+            - Usuario=${SYSTEM_INTERNAL_USER_NAME}
+            - LoggingServerAddress=http://${ELASTIC_HOST}:9200
         networks:
             - tecwindows
         depends_on:
@@ -31,12 +33,12 @@ services:
         image: bennersistemas/wfl:19.1.latest
         container_name: tec-wfl
         environment:
-            - superServerHost=[servidor]
-            - systemName=[sistema]
-            - user=[usuário]
-            - password=[senha]
-            - notifySenderUser=[usuário]
-            - loggingServerAddress=http://[servidor]:9200
+            - superServerHost=${BSERVER_HOST}
+            - systemName=${SYSTEM_NAME}
+            - user=${SYSTEM_INTERNAL_USER_NAME}
+            - password=${SYSTEM_INTERNAL_USER_PASS}
+            - notifySenderUser=${SYSTEM_INTERNAL_USER_NAME}
+            - loggingServerAddress=http://${ELASTIC_HOST}:9200
         networks:
             - tecwindows
         depends_on:
@@ -45,18 +47,18 @@ services:
         image: bennersistemas/wes:19.1.latest
         container_name: tec-wes
         environment:
-            - superserverhost=[servidor]
-            - superserversystemname=[sistema]
-            - anonymoususername=[usuário]
-            - anonymouspassword=[senha]
-            - systeminstancename=[sistema]
-            - loggingserveraddress=http://[servidor]:9200
-            - sessionhost=[servidor]
+            - superserverhost=${BSERVER_HOST}
+            - superserversystemname=${SYSTEM_NAME}
+            - anonymoususername=${SYSTEM_INTERNAL_USER_NAME}
+            - anonymouspassword=${SYSTEM_INTERNAL_USER_PASS}
+            - systeminstancename=${SYSTEM_INSTANCE_NAME}
+            - loggingserveraddress=http://${ELASTIC_HOST}:9200
+            - sessionhost=${REDIS_HOST}
         networks:
             - tecwindows
+        ports:
+            - ${WES_HOST_PORT}:80
         depends_on:
             - bserver
-volumes:
 networks:
     tecwindows:
-        driver: bridge

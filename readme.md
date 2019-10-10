@@ -19,9 +19,9 @@ Também é possível utilizar outros componentes para atender as necessidades. E
 - [portainer](https://hub.docker.com/r/portainer/portainer) - utilizado como interface para gerenciar seu Docker host e Swarm cluster
 - [keycloak](https://hub.docker.com/r/jboss/keycloak) - utilizado como servidor de identidade
 - [postgreSQL](https://hub.docker.com/_/postgres) - utilizado como banco de dados relacional para os sistemas benner
-- [adminer](https://hub.docker.com/_/adminer) - utilizado como interface para gerenciar bancos de dados
+- [pgadmin](https://hub.docker.com/r/dpage/pgadmin4) - utilizado como interface para gerenciar o postgresql
 
-## Executando o compose linux
+### Executando o compose linux
 
 Entre no terminal linux, geralmente pelo comando `ssh root@[hostname]`, então vá até o diretório raiz, geralmente pelo comando `cd /`.
 
@@ -31,6 +31,8 @@ Faça o `clone` deste repositório:
 git clone --progress -v "https://github.com/benner-sistemas/containers.git"
 ```
 
+Provavelmente você precisará de um usuário e senha para clonar este repositório. Caso suas credenciais do domínio benner não tenham permissão, acione alguém da Tecnologia para liberar o acesso ao repositório.
+
 Após clonar o repositório, entre no diretório, com o comando `cd containers`.
 
 Agora basta executar o compose linux, através do seguinte comando:
@@ -39,7 +41,57 @@ Agora basta executar o compose linux, através do seguinte comando:
 docker-compose -f docker-compose-linux.yml up -d
 ```
 
-Se você chegou até aqui, parabéns! Nesse ponto deveria estar tudo pronto, mas se for a promeira vez que você executa esse procedimento, sugiro os seguintes materiais:
+Se você chegou até aqui, parabéns! Nesse ponto deveria estar tudo pronto, mas se for a primeira vez que você executa esse procedimento, sugiro os seguintes materiais:
 
 - [verificando a saúde do compose linux](./compose-linux-healthcheck.md)
 - [solucionando problemas do compose linux](./compose-linux-troubleshooting.md)
+
+## docker-compose-windows.yml
+
+Este [arquivo](./docker-compose-windows.yml) armazena alguns componentes Benner da nossa arquitetura:
+
+- [bserver](https://hub.docker.com/r/bennersistemas/bserver) - Esta é uma imagem construída e liberada pela Tecnologia Benner contendo o Benner Server
+- [btl](https://hub.docker.com/r/bennersistemas/btl) - Esta é uma imagem construída e liberada pela Tecnologia Benner contendo o Worker do BTL (Business Tasks Library)
+- [wfl](https://hub.docker.com/r/bennersistemas/wfl) - Esta é uma imagem construída e liberada pela Tecnologia Benner contendo o Workflow
+- [wes](https://hub.docker.com/r/bennersistemas/wes) - Esta é uma imagem construída e liberada pela Tecnologia Benner contendo o WES (Web Enterprise Suite)
+
+### Executando o compose windows
+
+Entre no terminal windows, então vá até o diretório raiz, geralmente pelo comando `cd /`.
+
+Faça o `clone` deste repositório:
+
+``` bash
+git clone --progress -v "https://github.com/benner-sistemas/containers.git"
+```
+
+Após clonar o repositório, entre no diretório, com o comando `cd containers`.
+
+Edite o arquivo `benner.env` para informar todos os parâmetros dos componentes Benner.
+
+Devido à um bug no docker-compose para windows, você precisará explicitamente carregar o benner.env para que o compose consiga recuperar os parâmetros. Para facilitar criamos um script powershell onde você pode opcionalmente informar qualquer arquivo .env:
+
+```` bash
+.\load-benner-env.ps1 .\benner.env
+````
+
+Você ainda pode organizar vários arquivos de parametrização. Por exemplo:
+
+- `desenv.env`
+- `qa.env`
+- `homolog.env`
+- `prod.env`
+
+Agora basta executar o compose windows, através do seguinte comando:
+
+``` bash
+docker-compose -f docker-compose-windows.yml up -d
+```
+
+Opcionalmente você pode carregar o arquivo .env e disparar o compose em uma linha de instrução, separando por `;` veja:
+
+``` bash
+.\load-benner-env.ps1 .\benner.env; docker-compose -f docker-compose-windows.yml up -d
+```
+
+Opcionalmente você pode editar diretamente o arquivo `docker-compose-windows.yml` e informar os parâmetros para cada um dos containers nele.
