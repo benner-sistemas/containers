@@ -1,8 +1,9 @@
-version: '3.2'
+version: '3.5'
 services:
     bserver:
-        image: bennersistemas/bserver:19.1.latest
+        image: bennersistemas/bserver:${VERSION_LABEL}
         container_name: tec-bserver
+        isolation: process
         environment:
             - WorkDir=C:\Benner\Install\
             - Driver=${BS_DB_DRIVER}
@@ -18,7 +19,7 @@ services:
         networks:
             - tecwindows
     btl:
-        image: bennersistemas/btl:19.1.latest
+        image: bennersistemas/btl:${VERSION_LABEL}
         container_name: tec-btl
         environment:
             - Servidor=${BSERVER_HOST}
@@ -30,7 +31,7 @@ services:
         depends_on:
             - bserver
     wfl:
-        image: bennersistemas/wfl:19.1.latest
+        image: bennersistemas/wfl:${VERSION_LABEL}
         container_name: tec-wfl
         environment:
             - superServerHost=${BSERVER_HOST}
@@ -44,7 +45,7 @@ services:
         depends_on:
             - bserver
     wes:
-        image: bennersistemas/wes:19.1.latest
+        image: bennersistemas/wes:${VERSION_LABEL}
         container_name: tec-wes
         environment:
             - superserverhost=${BSERVER_HOST}
