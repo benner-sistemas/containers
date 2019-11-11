@@ -57,6 +57,8 @@ services:
             - sessionhost=${REDIS_HOST}
         networks:
             - tecwindows
+        volumes:
+            - ${WES_C_DATA}:C:\data\
         ports:
             - ${WES_HOST_PORT}:80
         depends_on:
