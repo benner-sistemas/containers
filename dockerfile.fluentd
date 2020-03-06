@@ -1,0 +1,7 @@
+# docker build -t fluentd-custom -f dockerfile.fluentd .
+FROM fluent/fluentd
+RUN apk update && apk upgrade && apk add build-base \
+    && apk --no-cache add ruby ruby-dev ruby-bundler ruby-json ruby-irb ruby-rake ruby-bigdecimal ruby-rdoc
+RUN fluent-gem install fluent-plugin-elasticsearch \
+    && fluent-gem install fluent-plugin-mongo
+COPY fluent.conf  /fluentd/etc/
