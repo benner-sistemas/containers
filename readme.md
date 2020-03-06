@@ -20,6 +20,9 @@ Também é possível utilizar outros componentes para atender as necessidades. E
 - [keycloak](https://hub.docker.com/r/jboss/keycloak) - utilizado como servidor de identidade
 - [postgreSQL](https://hub.docker.com/_/postgres) - utilizado como banco de dados relacional para os sistemas benner
 - [pgadmin](https://hub.docker.com/r/dpage/pgadmin4) - utilizado como interface para gerenciar o postgresql
+- [mongo](https://www.mongodb.com/) - utilizado como repositório noSQL em nossa arquitetura
+- [mongo-express](https://hub.docker.com/_/mongo-express) - utilizado como interface para gerenciar o mongo
+- [fluentd](https://www.fluentd.org/) - utilizado como agent intermediário para receber logs estruturados e enviar para vários destinos conforme [configuração](./fluent.conf)
 
 ### Executando o compose linux
 
@@ -35,6 +38,12 @@ Provavelmente você precisará de um usuário e senha para clonar este repositó
 
 Após clonar o repositório, entre no diretório, com o comando `cd containers`.
 
+Monte uma nova imagem do FluentD conforme suas necessidades de configuração, ou seja, altere o arquivo [fluent.conf](./fluent.conf) antes de seguir adiante. Quando estiver pronto, execute:
+
+``` bash
+docker build -t fluentd-custom -f dockerfile.fluentd .
+```
+
 Agora basta executar o compose linux, através do seguinte comando:
 
 ``` bash
@@ -45,6 +54,8 @@ Se você chegou até aqui, parabéns! Nesse ponto deveria estar tudo pronto, mas
 
 - [verificando a saúde do compose linux](./compose-linux-healthcheck.md)
 - [solucionando problemas do compose linux](./compose-linux-troubleshooting.md)
+
+Importante também garantir a existência de databases e collections no mongo conforme sua necessidade.
 
 ## docker-compose-windows.yml
 
