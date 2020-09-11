@@ -32,7 +32,9 @@ services:
             - mongo
             - elasticsearch
     elasticsearch:
-        image: docker.elastic.co/elasticsearch/elasticsearch:6.4.0
+        #image: docker.elastic.co/elasticsearch/elasticsearch:6.4.0
+        # we are changing original elastic image for one with ingest-attachment installed, so we can index files
+        image: bennersistemas/elasticsearch-ingest-attachment:7.9.0
         container_name: tec-elasticsearch
         environment:
             - cluster.name=docker-cluster

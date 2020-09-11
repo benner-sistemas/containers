@@ -30,6 +30,19 @@ services:
             - tecwindows
         depends_on:
             - bserver
+    #btl-agendamentos:
+    #    image: bennersistemas/btl:${VERSION_LABEL}
+    #    container_name: tec-btl-agendamentos
+    #    environment:
+    #        - Fila=Z_AGENDAMENTOREQUISICOES
+    #        - Servidor=${BSERVER_HOST}
+    #        - Sistema=${SYSTEM_NAME}
+    #        - Usuario=${SYSTEM_INTERNAL_USER_NAME}
+    #        - LoggingServerAddress=http://${ELASTIC_HOST}:9200
+    #    networks:
+    #        - tecwindows
+    #    depends_on:
+    #        - btl
     wfl:
         image: bennersistemas/wfl:${VERSION_LABEL}
         container_name: tec-wfl

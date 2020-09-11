@@ -1,0 +1,10 @@
+FROM docker.elastic.co/elasticsearch/elasticsearch:7.9.0
+RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch ingest-attachment
+#RUN ./bin/elasticsearch-plugin list
+
+
+# to build:
+# docker build -t bennersistemas/elasticsearch-ingest-attachment:7.9.0 -f dockerfile.elasticsearch-ingest-attachment .
+
+# to upload:
+# docker push bennersistemas/elasticsearch-ingest-attachment:7.9.0
